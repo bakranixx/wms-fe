@@ -5,10 +5,12 @@ import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { PageHeader } from "@/components/shared/page-components";
 import { mockInventoryItems, mockWarehouses } from "@/lib/mock-data";
 import type { InventoryItem } from "@/types";
+import { useT } from "@/hooks/use-translations";
 import { InventoryStats } from "./_components/inventory-stats";
 import { InventoryTable } from "./_components/inventory-table";
 
 export default function InventoryPage() {
+  const t = useT();
   const [inventoryItems] = React.useState<InventoryItem[]>(mockInventoryItems);
 
   const totalStock = inventoryItems.reduce((sum, item) => sum + item.availableStock, 0);
@@ -22,9 +24,9 @@ export default function InventoryPage() {
   return (
     <DashboardLayout>
       <PageHeader
-        title="Inventory"
-        description="Real-time stock levels across all warehouses"
-        breadcrumbs={[{ label: "Inventory" }]}
+        title={t.inventory.title}
+        description={t.inventory.description}
+        breadcrumbs={[{ label: t.inventory.title }]}
       />
 
       <InventoryStats

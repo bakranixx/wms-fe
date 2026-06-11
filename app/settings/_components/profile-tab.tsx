@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { User } from "lucide-react";
+import { useT } from "@/hooks/use-translations";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,11 +15,12 @@ interface ProfileTabProps {
 }
 
 export function ProfileTab({ onSave }: ProfileTabProps) {
+  const t = useT();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Profile Information</CardTitle>
-        <CardDescription>Update your personal information and profile picture.</CardDescription>
+        <CardTitle>{t.settings.profile.title}</CardTitle>
+        <CardDescription>{t.settings.profile.description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center gap-6">
@@ -42,20 +44,20 @@ export function ProfileTab({ onSave }: ProfileTabProps) {
             <Input id="lastName" defaultValue="User" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{t.settings.profile.email}</Label>
             <Input id="email" type="email" defaultValue="admin@warehouse.com" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone</Label>
+            <Label htmlFor="phone">{t.settings.profile.phone}</Label>
             <Input id="phone" defaultValue="+62812345678" />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="role">Role</Label>
+          <Label htmlFor="role">{t.settings.profile.role}</Label>
           <Input id="role" defaultValue="Administrator" disabled />
         </div>
         <div className="flex justify-end">
-          <Button onClick={onSave}>Save Changes</Button>
+          <Button onClick={onSave}>{t.settings.profile.save}</Button>
         </div>
       </CardContent>
     </Card>

@@ -15,6 +15,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
+import { useT } from "@/hooks/use-translations";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { PageHeader } from "@/components/shared/page-components";
 import { DataTable, DataTableColumnHeader } from "@/components/shared/data-table";
@@ -47,6 +48,7 @@ import { MovementStats } from "./_components/movement-stats";
 import { MovementCharts } from "./_components/movement-charts";
 
 export default function StockMovementPage() {
+  const t = useT();
   const [movements, setMovements] = React.useState<StockMovement[]>(mockStockMovements);
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
@@ -105,7 +107,7 @@ export default function StockMovementPage() {
   const columns: ColumnDef<StockMovement>[] = [
     {
       accessorKey: "transactionId",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Transaction ID" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.stockMovement.columns.transactionId} />,
       cell: ({ row }) => (
         <span className="font-mono text-sm font-medium text-primary">
           {row.getValue("transactionId")}
@@ -114,7 +116,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "movementType",
-      header: "Movement Type",
+      header: t.stockMovement.columns.movementType,
       cell: ({ row }) => {
         const type = row.getValue("movementType") as MovementType;
         const config = movementTypeConfig[type];
@@ -131,7 +133,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "sourceType",
-      header: "Source",
+      header: t.stockMovement.columns.source,
       cell: ({ row }) => {
         const source = row.original.sourceType;
         return (
@@ -143,7 +145,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "product.name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Product" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.stockMovement.columns.product} />,
       cell: ({ row }) => {
         const product = row.original.product;
         return (
@@ -161,7 +163,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "product.category",
-      header: "Category",
+      header: t.stockMovement.columns.category,
       cell: ({ row }) => (
         <Badge variant="secondary" className="text-xs">
           {row.original.product.category}
@@ -170,7 +172,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "quantity",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Qty" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.stockMovement.columns.qty} />,
       cell: ({ row }) => {
         const qty = row.original.quantity;
         const type = row.original.movementType;
@@ -192,7 +194,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "warehouse.name",
-      header: "Warehouse",
+      header: t.stockMovement.columns.warehouse,
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
@@ -202,7 +204,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t.stockMovement.columns.status,
       cell: ({ row }) => {
         const status = row.original.status;
         const config = statusConfig[status];
@@ -215,7 +217,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "userName",
-      header: "Created By",
+      header: t.stockMovement.columns.createdBy,
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
@@ -227,7 +229,7 @@ export default function StockMovementPage() {
     },
     {
       accessorKey: "timestamp",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.stockMovement.columns.date} />,
       cell: ({ row }) => (
         <div className="text-sm">
           <p className="font-medium">{format(row.original.timestamp, "MMM dd, yyyy")}</p>
@@ -247,18 +249,18 @@ export default function StockMovementPage() {
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={() => viewDetail(row.original)}>
               <Eye className="mr-2 h-4 w-4" />
-              View Details
+              {t.stockMovement.actions.viewDetails}
             </DropdownMenuItem>
             {row.original.status === "Draft" && (
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="text-emerald-500">
                   <CheckCircle2 className="mr-2 h-4 w-4" />
-                  Post Movement
+                  {t.stockMovement.actions.postMovement}
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-red-500">
                   <XCircle className="mr-2 h-4 w-4" />
-                  Cancel
+                  {t.stockMovement.actions.cancel}
                 </DropdownMenuItem>
               </>
             )}
@@ -271,21 +273,21 @@ export default function StockMovementPage() {
   return (
     <DashboardLayout>
       <PageHeader
-        title="Stock Movement"
-        description="Centralized inventory transaction management - record inbound, outbound, adjustments and transfers"
-        breadcrumbs={[{ label: "Stock Movement" }]}
+        title={t.stockMovement.title}
+        description={t.stockMovement.description}
+        breadcrumbs={[{ label: t.stockMovement.title }]}
         actions={
           <div className="flex items-center gap-3">
             <Button variant="outline" className="border-border/50">
               <Download className="mr-2 h-4 w-4" />
-              Export
+              {t.stockMovement.export}
             </Button>
             <Button
               onClick={() => setIsDialogOpen(true)}
               className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Movement
+              {t.stockMovement.addMovement}
             </Button>
           </div>
         }
@@ -298,7 +300,7 @@ export default function StockMovementPage() {
       <Card className="border-border/50 bg-card/50 backdrop-blur">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-semibold">Movement History</CardTitle>
+            <CardTitle className="text-base font-semibold">{t.stockMovement.movementHistory}</CardTitle>
             <div className="flex items-center gap-2">
               <Select value={filterType} onValueChange={setFilterType}>
                 <SelectTrigger className="w-36 h-9">
@@ -306,11 +308,11 @@ export default function StockMovementPage() {
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Types</SelectItem>
-                  <SelectItem value="INBOUND">Inbound</SelectItem>
-                  <SelectItem value="OUTBOUND">Outbound</SelectItem>
-                  <SelectItem value="ADJUSTMENT">Adjustment</SelectItem>
-                  <SelectItem value="TRANSFER">Transfer</SelectItem>
+                  <SelectItem value="all">{t.stockMovement.allTypes}</SelectItem>
+                  <SelectItem value="INBOUND">{t.stockMovement.inbound}</SelectItem>
+                  <SelectItem value="OUTBOUND">{t.stockMovement.outbound}</SelectItem>
+                  <SelectItem value="ADJUSTMENT">{t.stockMovement.adjustment}</SelectItem>
+                  <SelectItem value="TRANSFER">{t.stockMovement.transfer}</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={filterStatus} onValueChange={setFilterStatus}>
@@ -318,10 +320,10 @@ export default function StockMovementPage() {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="Draft">Draft</SelectItem>
-                  <SelectItem value="Posted">Posted</SelectItem>
-                  <SelectItem value="Cancelled">Cancelled</SelectItem>
+                  <SelectItem value="all">{t.stockMovement.allStatus}</SelectItem>
+                  <SelectItem value="Draft">{t.stockMovement.draft}</SelectItem>
+                  <SelectItem value="Posted">{t.stockMovement.posted}</SelectItem>
+                  <SelectItem value="Cancelled">{t.stockMovement.cancelled}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -331,7 +333,7 @@ export default function StockMovementPage() {
           <DataTable
             columns={columns}
             data={filteredMovements}
-            searchPlaceholder="Search transactions..."
+            searchPlaceholder={t.stockMovement.searchPlaceholder}
           />
         </CardContent>
       </Card>

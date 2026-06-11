@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useT } from "@/hooks/use-translations";
 import type { Product } from "@/types";
 
 interface LowStockReportProps {
@@ -19,11 +20,12 @@ interface LowStockReportProps {
 }
 
 export function LowStockReport({ products }: LowStockReportProps) {
+  const t = useT();
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Low Stock Alert Report</CardTitle>
-        <CardDescription>Products below minimum stock level</CardDescription>
+        <CardTitle className="text-base">{t.reports.lowStock.title}</CardTitle>
+        <CardDescription>{t.reports.lowStock.description}</CardDescription>
       </CardHeader>
       <CardContent>
         {products.length === 0 ? (
@@ -31,20 +33,17 @@ export function LowStockReport({ products }: LowStockReportProps) {
             <div className="rounded-full bg-emerald-500/10 p-4 text-emerald-500">
               <BarChart3 className="h-8 w-8" />
             </div>
-            <h3 className="mt-4 text-lg font-semibold">All Stock Levels Normal</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              No products are currently below minimum stock level.
-            </p>
+            <h3 className="mt-4 text-lg font-semibold">{t.reports.lowStock.noData}</h3>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>SKU</TableHead>
-                <TableHead>Product</TableHead>
+                <TableHead>{t.inventory.columns.sku}</TableHead>
+                <TableHead>{t.inventory.columns.product}</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead className="text-right">Current Stock</TableHead>
-                <TableHead className="text-right">Min Stock</TableHead>
+                <TableHead className="text-right">{t.inventory.totalStock}</TableHead>
+                <TableHead className="text-right">{t.inventory.columns.minStock}</TableHead>
                 <TableHead className="text-right">Shortage</TableHead>
               </TableRow>
             </TableHeader>

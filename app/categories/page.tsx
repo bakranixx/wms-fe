@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { Tag, Plus, Search, Filter, MoreHorizontal, Pencil, Trash2, Package } from "lucide-react";
 import { toast } from "sonner";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import { useT } from "@/hooks/use-translations";
 import { PremiumStatCard, StatusBadge, EmptyState } from "@/components/shared/premium-components";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,7 @@ import { DeleteCategoryDialog } from "./_components/delete-category-dialog";
 type Category = (typeof mockCategories)[number];
 
 export default function CategoriesPage() {
+  const t = useT();
   const [categories, setCategories] = React.useState<Category[]>(mockCategories);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = React.useState(false);
@@ -103,7 +105,7 @@ export default function CategoriesPage() {
           c.id === selectedCategory.id ? { ...c, ...values } : c,
         ),
       );
-      toast.success("Category updated successfully");
+      toast.success(t.categories.form.updateSuccess);
     } else {
       const newCategory: Category = {
         id: `${Date.now()}`,
@@ -113,14 +115,14 @@ export default function CategoriesPage() {
         createdAt: new Date(),
       };
       setCategories((prev) => [newCategory, ...prev]);
-      toast.success("Category created successfully");
+      toast.success(t.categories.form.createSuccess);
     }
   };
 
   const handleDelete = () => {
     if (!selectedCategory) return;
     setCategories((prev) => prev.filter((c) => c.id !== selectedCategory.id));
-    toast.success("Category deleted successfully");
+    toast.success(t.categories.form.deleteSuccess);
     setIsDeleteOpen(false);
     setSelectedCategory(null);
   };
@@ -132,43 +134,43 @@ export default function CategoriesPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Tag className="h-6 w-6 text-primary" />
-            Product Categories
+            {t.categories.title}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Manage product category classifications
+            {t.categories.description}
           </p>
         </div>
         <Button onClick={openCreateForm}>
           <Plus className="h-4 w-4 mr-2" />
-          Add Category
+          {t.categories.addCategory}
         </Button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid gap-4 grid-cols-2 md:grid-cols-4 mb-6">
         <PremiumStatCard
-          title="Total Categories"
+          title={t.categories.stats.totalCategories}
           value={totalCategories}
           icon={Tag}
-          description="All categories"
+          description={t.categories.stats.allDesc}
         />
         <PremiumStatCard
-          title="Active"
+          title={t.categories.stats.active}
           value={activeCategories}
           icon={Tag}
-          description="Active categories"
+          description={t.categories.stats.activeDesc}
         />
         <PremiumStatCard
-          title="Total Products"
+          title={t.categories.stats.totalProducts}
           value={totalProducts}
           icon={Package}
-          description="Across all categories"
+          description={t.categories.stats.acrossDesc}
         />
         <PremiumStatCard
-          title="Avg Products"
+          title={t.categories.stats.avgProducts}
           value={Math.round(totalProducts / totalCategories)}
           icon={Package}
-          description="Per category"
+          description={t.categories.stats.perCategory}
         />
       </div>
 
@@ -179,7 +181,7 @@ export default function CategoriesPage() {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search categories..."
+                placeholder={t.categories.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -188,10 +190,10 @@ export default function CategoriesPage() {
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[150px]">
                 <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="All Status" />
+                <SelectValue placeholder={t.common.allStatus} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">{t.common.allStatus}</SelectItem>
                 <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="inactive">Inactive</SelectItem>
               </SelectContent>
@@ -203,19 +205,19 @@ export default function CategoriesPage() {
       {/* Categories Table */}
       <Card className="glass-card border-primary/10">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-semibold">All Categories</CardTitle>
+          <CardTitle className="text-base font-semibold">{t.categories.allCategories}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {filteredCategories.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-border/50">
-                  <TableHead className="text-xs">Code</TableHead>
-                  <TableHead className="text-xs">Name</TableHead>
-                  <TableHead className="text-xs">Description</TableHead>
-                  <TableHead className="text-xs">Products</TableHead>
-                  <TableHead className="text-xs">Status</TableHead>
-                  <TableHead className="text-xs">Created</TableHead>
+                  <TableHead className="text-xs">{t.categories.columns.code}</TableHead>
+                  <TableHead className="text-xs">{t.categories.columns.name}</TableHead>
+                  <TableHead className="text-xs">{t.categories.columns.description}</TableHead>
+                  <TableHead className="text-xs">{t.categories.columns.products}</TableHead>
+                  <TableHead className="text-xs">{t.categories.columns.status}</TableHead>
+                  <TableHead className="text-xs">{t.categories.columns.created}</TableHead>
                   <TableHead className="text-xs text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -253,7 +255,7 @@ export default function CategoriesPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => openEditForm(category)}>
                             <Pencil className="h-4 w-4 mr-2" />
-                            Edit
+                            {t.common.edit}
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem
@@ -261,7 +263,7 @@ export default function CategoriesPage() {
                             className="text-destructive"
                           >
                             <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
+                            {t.common.delete}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -273,8 +275,8 @@ export default function CategoriesPage() {
           ) : (
             <EmptyState
               icon={Tag}
-              title="No categories found"
-              description="Try adjusting your search or filters"
+              title={t.categories.noCategories}
+              description={t.categories.noCategoriesDesc}
             />
           )}
         </CardContent>

@@ -2,6 +2,7 @@
 
 import { ClipboardList, Package, TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
 import { SummaryCard } from "@/components/shared/page-components";
+import { useT } from "@/hooks/use-translations";
 
 interface InventoryStatsProps {
   totalStock: number;
@@ -18,34 +19,35 @@ export function InventoryStats({
   outgoingStock,
   lowStockCount,
 }: InventoryStatsProps) {
+  const t = useT();
   return (
     <div className="mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
       <SummaryCard
-        title="Total Stock"
+        title={t.inventory.totalStock}
         value={totalStock.toLocaleString()}
         icon={<ClipboardList className="h-5 w-5" />}
         description="Available units"
       />
       <SummaryCard
-        title="Reserved"
+        title={t.inventory.reserved}
         value={reservedStock.toLocaleString()}
         icon={<Package className="h-5 w-5" />}
         description="Allocated for orders"
       />
       <SummaryCard
-        title="Incoming"
+        title={t.inventory.incoming}
         value={`+${incomingStock.toLocaleString()}`}
         icon={<TrendingUp className="h-5 w-5" />}
         description="Expected from POs"
       />
       <SummaryCard
-        title="Outgoing"
+        title={t.inventory.outgoing}
         value={`-${outgoingStock.toLocaleString()}`}
         icon={<TrendingDown className="h-5 w-5" />}
         description="Allocated for DOs"
       />
       <SummaryCard
-        title="Low Stock"
+        title={t.inventory.lowStock}
         value={lowStockCount}
         icon={<AlertTriangle className="h-5 w-5" />}
         description="Items below minimum"

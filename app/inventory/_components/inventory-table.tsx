@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useT } from "@/hooks/use-translations";
 import type { InventoryItem, Warehouse } from "@/types";
 
 interface InventoryTableProps {
@@ -21,6 +22,7 @@ interface InventoryTableProps {
 }
 
 export function InventoryTable({ data, warehouses }: InventoryTableProps) {
+  const t = useT();
   const [filterWarehouse, setFilterWarehouse] = React.useState<string>("all");
 
   const filteredItems = React.useMemo(() => {
@@ -31,14 +33,14 @@ export function InventoryTable({ data, warehouses }: InventoryTableProps) {
   const columns: ColumnDef<InventoryItem>[] = [
     {
       accessorKey: "product.sku",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="SKU" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.inventory.columns.sku} />,
       cell: ({ row }) => (
         <span className="font-mono text-sm">{row.original.product.sku}</span>
       ),
     },
     {
       accessorKey: "product.name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Product" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.inventory.columns.product} />,
       cell: ({ row }) => {
         const product = row.original.product;
         const isLowStock = row.original.availableStock < product.minStock;
@@ -63,7 +65,7 @@ export function InventoryTable({ data, warehouses }: InventoryTableProps) {
     },
     {
       accessorKey: "warehouse.name",
-      header: "Warehouse",
+      header: t.inventory.columns.warehouse,
       cell: ({ row }) => row.original.warehouse.name,
     },
     {
@@ -75,7 +77,7 @@ export function InventoryTable({ data, warehouses }: InventoryTableProps) {
     },
     {
       accessorKey: "availableStock",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Available" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.inventory.columns.available} />,
       cell: ({ row }) => {
         const available = row.original.availableStock;
         const minStock = row.original.product.minStock;
@@ -88,21 +90,21 @@ export function InventoryTable({ data, warehouses }: InventoryTableProps) {
     },
     {
       accessorKey: "reservedStock",
-      header: "Reserved",
+      header: t.inventory.columns.reserved,
       cell: ({ row }) => (
         <span className="text-muted-foreground">{row.original.reservedStock.toLocaleString()}</span>
       ),
     },
     {
       accessorKey: "incomingStock",
-      header: "Incoming",
+      header: t.inventory.columns.incoming,
       cell: ({ row }) => (
         <span className="text-emerald-500">+{row.original.incomingStock.toLocaleString()}</span>
       ),
     },
     {
       accessorKey: "outgoingStock",
-      header: "Outgoing",
+      header: t.inventory.columns.outgoing,
       cell: ({ row }) => (
         <span className="text-primary">-{row.original.outgoingStock.toLocaleString()}</span>
       ),
@@ -118,7 +120,7 @@ export function InventoryTable({ data, warehouses }: InventoryTableProps) {
     <DataTable
       columns={columns}
       data={filteredItems}
-      searchPlaceholder="Search inventory..."
+      searchPlaceholder={t.inventory.searchPlaceholder}
       filterComponent={
         <Select value={filterWarehouse} onValueChange={setFilterWarehouse}>
           <SelectTrigger className="w-48">

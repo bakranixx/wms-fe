@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Warehouse as WarehouseIcon, Plus } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import { useT } from "@/hooks/use-translations";
 import { PageHeader } from "@/components/shared/page-components";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,6 +14,7 @@ import { CapacityUsage } from "./_components/capacity-usage";
 import { StorageLocations } from "./_components/storage-locations";
 
 export default function WarehousePage() {
+  const t = useT();
   const [warehouses] = React.useState<Warehouse[]>(mockWarehouses);
   const [locations] = React.useState<Location[]>(mockLocations);
   const [selectedWarehouse, setSelectedWarehouse] = React.useState<string>(warehouses[0]?.id || "");
@@ -20,13 +22,13 @@ export default function WarehousePage() {
   return (
     <DashboardLayout>
       <PageHeader
-        title="Warehouse"
-        description="Manage warehouse locations and capacity"
-        breadcrumbs={[{ label: "Warehouse" }]}
+        title={t.warehouse.title}
+        description={t.warehouse.description}
+        breadcrumbs={[{ label: t.warehouse.title }]}
         actions={
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Add Warehouse
+            {t.warehouse.addWarehouse}
           </Button>
         }
       />

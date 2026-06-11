@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Settings, User, Bell, Shield, Database, Palette, Moon, Sun } from "lucide-react";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import { useT } from "@/hooks/use-translations";
 import { PageHeader } from "@/components/shared/page-components";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,7 @@ import { AppearanceTab } from "./_components/appearance-tab";
 import { SecurityTab } from "./_components/security-tab";
 
 export default function SettingsPage() {
+  const t = useT();
   const { theme, setTheme } = useThemeStore();
   const [notifications, setNotifications] = React.useState({
     email: true,
@@ -33,34 +35,34 @@ export default function SettingsPage() {
   };
 
   const handleSave = () => {
-    toast.success("Settings saved successfully");
+    toast.success(t.settings.saveSuccess);
   };
 
   return (
     <DashboardLayout>
       <PageHeader
-        title="Settings"
-        description="Manage your account and application preferences"
-        breadcrumbs={[{ label: "Settings" }]}
+        title={t.settings.title}
+        description={t.settings.description}
+        breadcrumbs={[{ label: t.settings.title }]}
       />
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList>
           <TabsTrigger value="profile" className="gap-2">
             <User className="h-4 w-4" />
-            Profile
+            {t.settings.tabs.profile}
           </TabsTrigger>
           <TabsTrigger value="notifications" className="gap-2">
             <Bell className="h-4 w-4" />
-            Notifications
+            {t.settings.tabs.notifications}
           </TabsTrigger>
           <TabsTrigger value="appearance" className="gap-2">
             <Palette className="h-4 w-4" />
-            Appearance
+            {t.settings.tabs.appearance}
           </TabsTrigger>
           <TabsTrigger value="security" className="gap-2">
             <Shield className="h-4 w-4" />
-            Security
+            {t.settings.tabs.security}
           </TabsTrigger>
         </TabsList>
 

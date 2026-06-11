@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useT } from "@/hooks/use-translations";
 import type { Warehouse } from "@/types";
 
 interface CapacityUsageProps {
@@ -8,12 +9,13 @@ interface CapacityUsageProps {
 }
 
 export function CapacityUsage({ warehouse }: CapacityUsageProps) {
+  const t = useT();
   const capacityPercent = Math.round((warehouse.usedCapacity / warehouse.capacity) * 100);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Capacity Usage</CardTitle>
+        <CardTitle className="text-base">{t.warehouse.capacity.title}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-center">
@@ -41,17 +43,17 @@ export function CapacityUsage({ warehouse }: CapacityUsageProps) {
             </svg>
             <div className="absolute flex flex-col items-center">
               <span className="text-3xl font-bold">{capacityPercent}%</span>
-              <span className="text-xs text-muted-foreground">Used</span>
+              <span className="text-xs text-muted-foreground">{t.warehouse.capacity.used}</span>
             </div>
           </div>
         </div>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Used</span>
+            <span className="text-muted-foreground">{t.warehouse.capacity.used}</span>
             <span className="font-medium">{warehouse.usedCapacity.toLocaleString()} units</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Available</span>
+            <span className="text-muted-foreground">{t.warehouse.capacity.available}</span>
             <span className="font-medium">{(warehouse.capacity - warehouse.usedCapacity).toLocaleString()} units</span>
           </div>
         </div>

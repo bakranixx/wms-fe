@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Sun, Moon, Settings, Palette } from "lucide-react";
+import { useT } from "@/hooks/use-translations";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
@@ -11,15 +12,16 @@ interface AppearanceTabProps {
 }
 
 export function AppearanceTab({ theme, onThemeChange }: AppearanceTabProps) {
+  const t = useT();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Appearance Settings</CardTitle>
-        <CardDescription>Customize how the application looks.</CardDescription>
+        <CardTitle>{t.settings.appearance.title}</CardTitle>
+        <CardDescription>{t.settings.appearance.description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
-          <Label>Theme</Label>
+          <Label>{t.settings.appearance.theme}</Label>
           <div className="grid gap-4 sm:grid-cols-3">
             <button
               onClick={() => onThemeChange("light")}
@@ -30,7 +32,7 @@ export function AppearanceTab({ theme, onThemeChange }: AppearanceTabProps) {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-white text-black shadow">
                 <Sun className="h-6 w-6" />
               </div>
-              <span className="text-sm font-medium">Light</span>
+              <span className="text-sm font-medium">{t.settings.appearance.light}</span>
             </button>
             <button
               onClick={() => onThemeChange("dark")}
@@ -41,7 +43,7 @@ export function AppearanceTab({ theme, onThemeChange }: AppearanceTabProps) {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-zinc-900 text-white shadow">
                 <Moon className="h-6 w-6" />
               </div>
-              <span className="text-sm font-medium">Dark</span>
+              <span className="text-sm font-medium">{t.settings.appearance.dark}</span>
             </button>
             <button
               onClick={() => onThemeChange("system")}
@@ -52,7 +54,7 @@ export function AppearanceTab({ theme, onThemeChange }: AppearanceTabProps) {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-white to-zinc-900 shadow">
                 <Settings className="h-6 w-6 text-gray-500" />
               </div>
-              <span className="text-sm font-medium">System</span>
+              <span className="text-sm font-medium">{t.settings.appearance.system}</span>
             </button>
           </div>
         </div>

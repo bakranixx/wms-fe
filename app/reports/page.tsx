@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockProducts, mockStockMovements } from "@/lib/mock-data";
 import { toast } from "sonner";
+import { useT } from "@/hooks/use-translations";
 import { ReportFilters } from "./_components/report-filters";
 import { InventoryReport } from "./_components/inventory-report";
 import { IncomingReport } from "./_components/incoming-report";
@@ -15,6 +16,7 @@ import { OutgoingReport } from "./_components/outgoing-report";
 import { LowStockReport } from "./_components/lowstock-report";
 
 export default function ReportsPage() {
+  const t = useT();
   const [dateFrom, setDateFrom] = React.useState("");
   const [dateTo, setDateTo] = React.useState("");
   const [reportType, setReportType] = React.useState("inventory");
@@ -30,18 +32,18 @@ export default function ReportsPage() {
   return (
     <DashboardLayout>
       <PageHeader
-        title="Reports"
-        description="Generate and export warehouse reports"
-        breadcrumbs={[{ label: "Reports" }]}
+        title={t.reports.title}
+        description={t.reports.description}
+        breadcrumbs={[{ label: t.reports.title }]}
         actions={
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => handleExport("csv")}>
               <Download className="mr-2 h-4 w-4" />
-              Export CSV
+              {t.reports.exportCSV}
             </Button>
             <Button onClick={() => handleExport("excel")}>
               <FileSpreadsheet className="mr-2 h-4 w-4" />
-              Export Excel
+              {t.reports.exportExcel}
             </Button>
           </div>
         }
@@ -59,10 +61,10 @@ export default function ReportsPage() {
 
       <Tabs defaultValue="inventory" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="inventory">Inventory</TabsTrigger>
-          <TabsTrigger value="incoming">Incoming</TabsTrigger>
-          <TabsTrigger value="outgoing">Outgoing</TabsTrigger>
-          <TabsTrigger value="lowstock">Low Stock</TabsTrigger>
+          <TabsTrigger value="inventory">{t.reports.tabs.inventory}</TabsTrigger>
+          <TabsTrigger value="incoming">{t.reports.tabs.incoming}</TabsTrigger>
+          <TabsTrigger value="outgoing">{t.reports.tabs.outgoing}</TabsTrigger>
+          <TabsTrigger value="lowstock">{t.reports.tabs.lowStock}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="inventory" className="space-y-6">

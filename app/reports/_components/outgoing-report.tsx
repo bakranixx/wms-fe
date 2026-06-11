@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useT } from "@/hooks/use-translations";
 import type { StockMovement } from "@/types";
 
 interface OutgoingReportProps {
@@ -18,6 +19,7 @@ interface OutgoingReportProps {
 }
 
 export function OutgoingReport({ movements }: OutgoingReportProps) {
+  const t = useT();
   return (
     <Card>
       <CardHeader>
@@ -28,12 +30,12 @@ export function OutgoingReport({ movements }: OutgoingReportProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Transaction ID</TableHead>
-              <TableHead>Product</TableHead>
+              <TableHead>{t.stockMovement.columns.transactionId}</TableHead>
+              <TableHead>{t.inventory.columns.product}</TableHead>
               <TableHead className="text-right">Quantity</TableHead>
-              <TableHead>Warehouse</TableHead>
+              <TableHead>{t.inventory.columns.warehouse}</TableHead>
               <TableHead>User</TableHead>
-              <TableHead>Date</TableHead>
+              <TableHead>{t.stockMovement.columns.date}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

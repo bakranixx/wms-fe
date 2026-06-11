@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Shield } from "lucide-react";
+import { useT } from "@/hooks/use-translations";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,26 +14,27 @@ interface SecurityTabProps {
 }
 
 export function SecurityTab({ onSave }: SecurityTabProps) {
+  const t = useT();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Security Settings</CardTitle>
-        <CardDescription>Manage your password and security preferences.</CardDescription>
+        <CardTitle>{t.settings.security.title}</CardTitle>
+        <CardDescription>{t.settings.security.description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
           <h4 className="font-medium">Change Password</h4>
           <div className="grid gap-4 sm:max-w-md">
             <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
+              <Label htmlFor="currentPassword">{t.settings.security.currentPassword}</Label>
               <Input id="currentPassword" type="password" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
+              <Label htmlFor="newPassword">{t.settings.security.newPassword}</Label>
               <Input id="newPassword" type="password" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <Label htmlFor="confirmPassword">{t.settings.security.confirmPassword}</Label>
               <Input id="confirmPassword" type="password" />
             </div>
           </div>
@@ -54,7 +56,7 @@ export function SecurityTab({ onSave }: SecurityTabProps) {
           <Button variant="outline">View Active Sessions</Button>
         </div>
         <div className="flex justify-end">
-          <Button onClick={onSave}>Update Security</Button>
+          <Button onClick={onSave}>{t.settings.security.save}</Button>
         </div>
       </CardContent>
     </Card>

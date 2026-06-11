@@ -78,3 +78,15 @@ export const useThemeStore = create<ThemeState>((set) => ({
   theme: 'dark',
   setTheme: (theme) => set({ theme }),
 }));
+
+type Language = 'en' | 'id';
+
+interface LanguageState {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+}
+
+export const useLanguageStore = create<LanguageState>((set) => ({
+  language: 'en',
+  setLanguage: (language) => set({ language }),
+}));

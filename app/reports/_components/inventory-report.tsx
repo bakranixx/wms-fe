@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { ChartContainer, SimpleBarChart, SimpleLineChart } from "@/components/charts/chart-components";
 import { stockByCategory, monthlyMovement } from "@/lib/mock-data";
+import { useT } from "@/hooks/use-translations";
 import type { Product } from "@/types";
 
 interface InventoryReportProps {
@@ -20,6 +21,7 @@ interface InventoryReportProps {
 }
 
 export function InventoryReport({ products }: InventoryReportProps) {
+  const t = useT();
   return (
     <div className="space-y-6">
       <div className="grid gap-6 lg:grid-cols-2">
@@ -49,12 +51,12 @@ export function InventoryReport({ products }: InventoryReportProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>SKU</TableHead>
-                <TableHead>Product</TableHead>
+                <TableHead>{t.inventory.columns.sku}</TableHead>
+                <TableHead>{t.inventory.columns.product}</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead className="text-right">Stock</TableHead>
-                <TableHead className="text-right">Min Stock</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead className="text-right">{t.inventory.totalStock}</TableHead>
+                <TableHead className="text-right">{t.inventory.columns.minStock}</TableHead>
+                <TableHead>{t.common.status}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -69,9 +71,9 @@ export function InventoryReport({ products }: InventoryReportProps) {
                   <TableCell className="text-right">{product.minStock.toLocaleString()}</TableCell>
                   <TableCell>
                     {product.stock < product.minStock ? (
-                      <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">Low Stock</Badge>
+                      <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20">{t.inventory.status.lowStock}</Badge>
                     ) : (
-                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">In Stock</Badge>
+                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">{t.inventory.status.inStock}</Badge>
                     )}
                   </TableCell>
                 </TableRow>

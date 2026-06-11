@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Bell } from "lucide-react";
+import { useT } from "@/hooks/use-translations";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
@@ -20,16 +21,17 @@ interface NotificationsTabProps {
 }
 
 export function NotificationsTab({ notifications, onToggle, onSave }: NotificationsTabProps) {
+  const t = useT();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Notification Preferences</CardTitle>
-        <CardDescription>Configure how you receive notifications.</CardDescription>
+        <CardTitle>{t.settings.notifications.title}</CardTitle>
+        <CardDescription>{t.settings.notifications.description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Email Notifications</Label>
+            <Label>{t.settings.notifications.email}</Label>
             <p className="text-sm text-muted-foreground">Receive notifications via email</p>
           </div>
           <Switch
@@ -40,7 +42,7 @@ export function NotificationsTab({ notifications, onToggle, onSave }: Notificati
         <Separator />
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Low Stock Alerts</Label>
+            <Label>{t.settings.notifications.lowStock}</Label>
             <p className="text-sm text-muted-foreground">Get notified when stock falls below minimum</p>
           </div>
           <Switch
@@ -51,7 +53,7 @@ export function NotificationsTab({ notifications, onToggle, onSave }: Notificati
         <Separator />
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Order Updates</Label>
+            <Label>{t.settings.notifications.orderUpdates}</Label>
             <p className="text-sm text-muted-foreground">Receive updates on PO and DO status changes</p>
           </div>
           <Switch
@@ -62,7 +64,7 @@ export function NotificationsTab({ notifications, onToggle, onSave }: Notificati
         <Separator />
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label>Weekly Reports</Label>
+            <Label>{t.settings.notifications.reports}</Label>
             <p className="text-sm text-muted-foreground">Receive weekly inventory summary reports</p>
           </div>
           <Switch
@@ -71,7 +73,7 @@ export function NotificationsTab({ notifications, onToggle, onSave }: Notificati
           />
         </div>
         <div className="flex justify-end">
-          <Button onClick={onSave}>Save Preferences</Button>
+          <Button onClick={onSave}>{t.settings.notifications.save}</Button>
         </div>
       </CardContent>
     </Card>

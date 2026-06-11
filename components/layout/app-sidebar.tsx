@@ -27,7 +27,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useSidebarStore } from "@/stores/ui-store";
+import { useSidebarStore, useLanguageStore } from "@/stores/ui-store";
+import { getTranslations } from "@/lib/translations";
 
 interface MenuItem {
   name: string;
@@ -43,46 +44,46 @@ interface MenuCategory {
 
 const menuCategories: MenuCategory[] = [
   {
-    label: "Main",
+    label: "main",
     items: [
-      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { name: "dashboard", href: "/dashboard", icon: LayoutDashboard },
     ],
   },
   {
-    label: "Master Data",
+    label: "masterData",
     items: [
-      { name: "Products", href: "/products", icon: Package },
-      { name: "Categories", href: "/categories", icon: Tag },
-      { name: "Vendors", href: "/vendors", icon: Users },
-      { name: "Garments", href: "/garments", icon: Shirt },
-      { name: "Warehouse", href: "/warehouse", icon: Warehouse },
+      { name: "products", href: "/products", icon: Package },
+      { name: "categories", href: "/categories", icon: Tag },
+      { name: "vendors", href: "/vendors", icon: Users },
+      { name: "garments", href: "/garments", icon: Shirt },
+      { name: "warehouse", href: "/warehouse", icon: Warehouse },
     ],
   },
   {
-    label: "Transactions",
+    label: "transactions",
     items: [
-      { name: "Purchase Orders", href: "/purchase-orders", icon: FileText },
-      { name: "Delivery Orders", href: "/delivery-orders", icon: Truck },
-      { name: "Stock Movement", href: "/stock-movement", icon: ArrowLeftRight },
+      { name: "purchaseOrders", href: "/purchase-orders", icon: FileText },
+      { name: "deliveryOrders", href: "/delivery-orders", icon: Truck },
+      { name: "stockMovement", href: "/stock-movement", icon: ArrowLeftRight },
     ],
   },
   {
-    label: "Inventory",
+    label: "inventory",
     items: [
-      { name: "Current Stock", href: "/inventory", icon: ClipboardList },
-      { name: "Receiving", href: "/receiving", icon: PackageCheck },
+      { name: "currentStock", href: "/inventory", icon: ClipboardList },
+      { name: "receiving", href: "/receiving", icon: PackageCheck },
     ],
   },
   {
-    label: "Analytics",
+    label: "analytics",
     items: [
-      { name: "Reports", href: "/reports", icon: BarChart3 },
+      { name: "reports", href: "/reports", icon: BarChart3 },
     ],
   },
   {
-    label: "System",
+    label: "system",
     items: [
-      { name: "Settings", href: "/settings", icon: Settings },
+      { name: "settings", href: "/settings", icon: Settings },
     ],
   },
 ];
@@ -90,6 +91,8 @@ const menuCategories: MenuCategory[] = [
 export function AppSidebar() {
   const pathname = usePathname();
   const { isCollapsed, setCollapsed } = useSidebarStore();
+  const { language } = useLanguageStore();
+  const t = getTranslations(language);
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -113,8 +116,8 @@ export function AppSidebar() {
                   <ShieldCheck className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-base font-bold text-primary">WMS PRO</span>
-                  <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">Warehouse System</span>
+                  <span className="text-base font-bold text-primary">{t.sidebar.wmsPro}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">{t.sidebar.warehouseSystem}</span>
                 </div>
               </motion.div>
             )}
@@ -155,7 +158,7 @@ export function AppSidebar() {
                       className="mb-2 px-3"
                     >
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-sidebar-foreground/40">
-                        {category.label}
+                        {t.sidebar[category.label as keyof typeof t.sidebar]}
                       </span>
                     </motion.div>
                   )}
@@ -193,7 +196,7 @@ export function AppSidebar() {
                               exit={{ opacity: 0, width: 0 }}
                               className="flex-1 truncate"
                             >
-                              {item.name}
+                              {t.sidebar[item.name as keyof typeof t.sidebar]}
                             </motion.span>
                           )}
                         </AnimatePresence>
@@ -208,7 +211,7 @@ export function AppSidebar() {
                         <Tooltip key={item.href}>
                           <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
                           <TooltipContent side="right" className="font-medium">
-                            {item.name}
+                            {t.sidebar[item.name as keyof typeof t.sidebar]}
                           </TooltipContent>
                         </Tooltip>
                       );

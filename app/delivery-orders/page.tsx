@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import {
   Plus,
@@ -34,9 +35,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { mockDeliveryOrders, mockStockMovements } from "@/lib/mock-data";
 import type { DeliveryOrder, DOStatus, StockMovement } from "@/types";
-import { CreateDODialog } from "./_components/create-do-dialog";
 import { ShipConfirmDialog } from "./_components/ship-confirm-dialog";
 import { DODetailSheet } from "./_components/do-detail-sheet";
+import { useT } from "@/hooks/use-translations";
 
 const statusFilter: DOStatus[] = ["Draft", "Picking", "Packing", "Shipped", "Completed", "Cancelled"];
 
@@ -53,10 +54,20 @@ const getStatusProgress = (status: DOStatus): number => {
 };
 
 export default function DeliveryOrdersPage() {
-  const [deliveryOrders, setDeliveryOrders] = React.useState<DeliveryOrder[]>(mockDeliveryOrders);
+  const router = useRouter();
+  const t = useT();
+  const [deliveryOrders, setDeliveryOrders] = React.useState<DeliveryOrder[]>(() => {
+    if (typeof window !== "undefined") {
+      const stored = sessionStorage.getItem("deliveryOrders");
+      if (stored) {
+        const parsed = JSON.parse(stored) as DeliveryOrder[];
+        return [...parsed, ...mockDeliveryOrders];
+      }
+    }
+    return mockDeliveryOrders;
+  });
   const [stockMovements, setStockMovements] = React.useState<StockMovement[]>(mockStockMovements);
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
-  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
   const [selectedDO, setSelectedDO] = React.useState<DeliveryOrder | null>(null);
   const [filterStatus, setFilterStatus] = React.useState<string>("all");
   const [shipConfirmOpen, setShipConfirmOpen] = React.useState(false);
@@ -70,10 +81,6 @@ export default function DeliveryOrdersPage() {
   const openDetail = (order: DeliveryOrder) => {
     setSelectedDO(order);
     setIsDetailOpen(true);
-  };
-
-  const handleCreateDO = (newDO: DeliveryOrder) => {
-    setDeliveryOrders([newDO, ...deliveryOrders]);
   };
 
   const updateDOStatus = (doOrder: DeliveryOrder, newStatus: DOStatus) => {
@@ -118,14 +125,14 @@ export default function DeliveryOrdersPage() {
   const columns: ColumnDef<DeliveryOrder>[] = [
     {
       accessorKey: "doNumber",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="DO Number" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.deliveryOrders.columns.doNumber} />,
       cell: ({ row }) => (
         <span className="font-mono text-sm font-medium text-primary">{row.getValue("doNumber")}</span>
       ),
     },
     {
       accessorKey: "garment",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Client" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.deliveryOrders.columns.client} />,
       cell: ({ row }) => {
         const garment = row.original.garment;
         return (
@@ -143,24 +150,24 @@ export default function DeliveryOrdersPage() {
     },
     {
       accessorKey: "warehouse",
-      header: "Warehouse",
+      header: t.deliveryOrders.columns.warehouse,
       cell: ({ row }) => row.original.warehouse.name,
     },
     {
       accessorKey: "deliveryDate",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Delivery Date" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.deliveryOrders.columns.deliveryDate} />,
       cell: ({ row }) => format(row.original.deliveryDate, "MMM dd, yyyy"),
     },
     {
       accessorKey: "items",
-      header: "Items",
+      header: t.deliveryOrders.columns.items,
       cell: ({ row }) => (
         <Badge variant="outline">{row.original.items.length} items</Badge>
       ),
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t.deliveryOrders.columns.status,
       cell: ({ row }) => (
         <div className="space-y-1">
           <StatusBadge status={row.getValue("status")} />
@@ -182,19 +189,19 @@ export default function DeliveryOrdersPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => openDetail(order)}>
                 <Eye className="mr-2 h-4 w-4" />
-                View Details
+                {t.deliveryOrders.actions.viewDetails}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               {order.status === "Draft" && (
                 <DropdownMenuItem onClick={() => updateDOStatus(order, "Picking")}>
                   <Check className="mr-2 h-4 w-4" />
-                  Start Picking
+                  {t.deliveryOrders.actions.startPicking}
                 </DropdownMenuItem>
               )}
               {order.status === "Picking" && (
                 <DropdownMenuItem onClick={() => updateDOStatus(order, "Packing")}>
                   <Check className="mr-2 h-4 w-4" />
-                  Complete Picking
+                  {t.deliveryOrders.actions.completePicking}
                 </DropdownMenuItem>
               )}
               {order.status === "Packing" && (
@@ -203,7 +210,7 @@ export default function DeliveryOrdersPage() {
                   setShipConfirmOpen(true);
                 }}>
                   <ArrowUpFromLine className="mr-2 h-4 w-4" />
-                  Mark as Shipped
+                  {t.deliveryOrders.actions.markShipped}
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -216,13 +223,13 @@ export default function DeliveryOrdersPage() {
   return (
     <DashboardLayout>
       <PageHeader
-        title="Delivery Orders"
-        description="Manage outbound orders to garment clients"
-        breadcrumbs={[{ label: "Delivery Orders" }]}
+        title={t.deliveryOrders.title}
+        description={t.deliveryOrders.description}
+        breadcrumbs={[{ label: t.deliveryOrders.title }]}
         actions={
-          <Button onClick={() => setIsCreateOpen(true)}>
+          <Button onClick={() => router.push('/delivery-orders/create')}>
             <Plus className="mr-2 h-4 w-4" />
-            Create DO
+            {t.deliveryOrders.createDO}
           </Button>
         }
       />
@@ -230,12 +237,12 @@ export default function DeliveryOrdersPage() {
       {deliveryOrders.length === 0 ? (
         <EmptyState
           icon={<Truck className="h-8 w-8" />}
-          title="No delivery orders found"
-          description="Get started by creating your first delivery order."
+          title={t.deliveryOrders.noDOFound}
+          description={t.deliveryOrders.noDOFoundDesc}
           action={
-            <Button onClick={() => setIsCreateOpen(true)}>
+            <Button onClick={() => router.push('/delivery-orders/create')}>
               <Plus className="mr-2 h-4 w-4" />
-              Create DO
+              {t.deliveryOrders.createDO}
             </Button>
           }
         />
@@ -243,14 +250,14 @@ export default function DeliveryOrdersPage() {
         <DataTable
           columns={columns}
           data={filteredOrders}
-          searchPlaceholder="Search delivery orders..."
+          searchPlaceholder={t.deliveryOrders.searchPlaceholder}
           filterComponent={
             <Select value={filterStatus} onValueChange={setFilterStatus}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter status" />
+                <SelectValue placeholder={t.common.filterStatus} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">{t.common.allStatus}</SelectItem>
                 {statusFilter.map((status) => (
                   <SelectItem key={status} value={status}>
                     {status}
@@ -261,12 +268,6 @@ export default function DeliveryOrdersPage() {
           }
         />
       )}
-
-      <CreateDODialog
-        open={isCreateOpen}
-        onOpenChange={setIsCreateOpen}
-        onSubmit={handleCreateDO}
-      />
 
       <ShipConfirmDialog
         open={shipConfirmOpen}

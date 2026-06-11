@@ -35,7 +35,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useSearchStore, useNotificationStore, useThemeStore, useSidebarStore } from "@/stores/ui-store";
+import { useSearchStore, useNotificationStore, useThemeStore, useSidebarStore, useLanguageStore } from "@/stores/ui-store";
+import { getTranslations, languages } from "@/lib/translations";
+import type { Language } from "@/lib/translations";
 
 const mockNotifications = [
   { id: 1, title: "Low Stock Alert", message: "T-Shirt Blank - White is below minimum stock", time: "5 min ago", unread: true },
@@ -50,6 +52,8 @@ export function TopNavbar() {
   const { query, setQuery, isOpen: searchOpen, setOpen: setSearchOpen } = useSearchStore();
   const { unreadCount, isOpen: notifOpen, setOpen: setNotifOpen, markAllRead } = useNotificationStore();
   const { theme, setTheme } = useThemeStore();
+  const { language, setLanguage } = useLanguageStore();
+  const t = getTranslations(language);
 
   React.useEffect(() => {
     if (theme === "dark") {
@@ -58,6 +62,10 @@ export function TopNavbar() {
       document.documentElement.classList.remove("dark");
     }
   }, [theme]);
+
+  React.useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   const today = new Date();
   const weekAgo = new Date(today);
@@ -82,10 +90,10 @@ export function TopNavbar() {
           
           <div className="hidden md:block">
             <h1 className="text-lg font-semibold text-foreground">
-              Welcome back, Admin!
+              {t.navbar.welcomeBack}
             </h1>
             <p className="text-sm text-muted-foreground">
-              Here&apos;s what&apos;s happening with your warehouse today.
+              {t.navbar.subtitle}
             </p>
           </div>
         </div>
@@ -96,7 +104,7 @@ export function TopNavbar() {
           <div className="relative hidden lg:flex">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search anything..."
+              placeholder={t.navbar.searchPlaceholder}
               className="w-64 pl-9 bg-secondary/50 border-border/50 focus:bg-background"
               onClick={() => setSearchOpen(true)}
               readOnly
@@ -126,6 +134,26 @@ export function TopNavbar() {
             )}
           </Button>
 
+          {/* Language Switcher */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">
+                <span className="text-sm font-semibold uppercase">{language}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-36">
+              {(Object.entries(languages) as [Language, string][]).map(([code, label]) => (
+                <DropdownMenuItem
+                  key={code}
+                  onClick={() => setLanguage(code)}
+                  className={language === code ? "bg-primary/10 font-semibold" : ""}
+                >
+                  {label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           {/* Notifications */}
           <DropdownMenu open={notifOpen} onOpenChange={setNotifOpen}>
             <DropdownMenuTrigger asChild>
@@ -140,7 +168,7 @@ export function TopNavbar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-80">
               <DropdownMenuLabel className="flex items-center justify-between">
-                <span>Notifications</span>
+                <span>{t.navbar.notifications}</span>
                 {unreadCount > 0 && (
                   <Button
                     variant="ghost"
@@ -148,7 +176,7 @@ export function TopNavbar() {
                     className="h-auto p-0 text-xs text-primary hover:text-primary"
                     onClick={markAllRead}
                   >
-                    Mark all read
+                    {t.navbar.markAllRead}
                   </Button>
                 )}
               </DropdownMenuLabel>
@@ -205,24 +233,24 @@ export function TopNavbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>{t.navbar.myAccount}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <User className="mr-2 h-4 w-4" />
-                Profile
+                {t.navbar.profile}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
-                Settings
+                {t.navbar.settings}
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <HelpCircle className="mr-2 h-4 w-4" />
-                Help
+                {t.navbar.help}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive">
                 <LogOut className="mr-2 h-4 w-4" />
-                Log out
+                {t.navbar.logOut}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -233,13 +261,13 @@ export function TopNavbar() {
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
-            <DialogTitle>Search</DialogTitle>
+            <DialogTitle>{t.search.title}</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search products, orders, vendors..."
+                placeholder={t.search.placeholder}
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 className="pl-9"
@@ -249,15 +277,15 @@ export function TopNavbar() {
             {query && (
               <div className="rounded-lg border p-4">
                 <p className="text-sm text-muted-foreground">
-                  Searching for &quot;{query}&quot;...
+                  {t.search.searching.replace("{query}", query)}
                 </p>
               </div>
             )}
             {!query && (
               <div className="flex flex-col gap-2">
-                <p className="text-sm font-medium text-muted-foreground">Quick Links</p>
+                <p className="text-sm font-medium text-muted-foreground">{t.search.quickLinks}</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {["Products", "Inventory", "Purchase Orders", "Delivery Orders"].map((item) => (
+                  {[t.search.products, t.search.inventory, t.search.purchaseOrders, t.search.deliveryOrders].map((item) => (
                     <Button
                       key={item}
                       variant="outline"

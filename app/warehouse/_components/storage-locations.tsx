@@ -3,6 +3,7 @@
 import { Package, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/hooks/use-translations";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { EmptyState } from "@/components/shared/page-components";
@@ -21,11 +22,12 @@ interface StorageLocationsProps {
 }
 
 export function StorageLocations({ locations }: StorageLocationsProps) {
+  const t = useT();
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">Storage Locations</CardTitle>
+          <CardTitle className="text-base">{t.warehouse.locations.title}</CardTitle>
           <Button variant="outline" size="sm">
             <Plus className="mr-2 h-4 w-4" />
             Add Location
@@ -44,8 +46,8 @@ export function StorageLocations({ locations }: StorageLocationsProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Bin Code</TableHead>
-                <TableHead>Zone</TableHead>
-                <TableHead>Rack</TableHead>
+                <TableHead>{t.warehouse.locations.zone}</TableHead>
+                <TableHead>{t.warehouse.locations.rack}</TableHead>
                 <TableHead>Shelf</TableHead>
                 <TableHead>Capacity</TableHead>
                 <TableHead>Usage</TableHead>

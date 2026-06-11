@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useT } from "@/hooks/use-translations";
 
 interface ReportFiltersProps {
   reportType: string;
@@ -33,6 +34,7 @@ export function ReportFilters({
   onDateToChange,
   onGenerate,
 }: ReportFiltersProps) {
+  const t = useT();
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -44,21 +46,21 @@ export function ReportFilters({
       <CardContent>
         <div className="grid gap-4 sm:grid-cols-4">
           <div className="space-y-2">
-            <Label>Report Type</Label>
+            <Label>{t.reports.filters.reportType}</Label>
             <Select value={reportType} onValueChange={onReportTypeChange}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="inventory">Inventory Report</SelectItem>
+                <SelectItem value="inventory">{t.reports.inventoryReport.title}</SelectItem>
                 <SelectItem value="incoming">Incoming Report</SelectItem>
                 <SelectItem value="outgoing">Outgoing Report</SelectItem>
-                <SelectItem value="lowstock">Low Stock Report</SelectItem>
+                <SelectItem value="lowstock">{t.reports.lowStock.title}</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>From Date</Label>
+            <Label>{t.reports.filters.dateFrom}</Label>
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -70,7 +72,7 @@ export function ReportFilters({
             </div>
           </div>
           <div className="space-y-2">
-            <Label>To Date</Label>
+            <Label>{t.reports.filters.dateTo}</Label>
             <div className="relative">
               <Calendar className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -84,7 +86,7 @@ export function ReportFilters({
           <div className="flex items-end">
             <Button className="w-full" onClick={onGenerate}>
               <BarChart3 className="mr-2 h-4 w-4" />
-              Generate Report
+              {t.reports.filters.generate}
             </Button>
           </div>
         </div>

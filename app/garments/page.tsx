@@ -4,6 +4,7 @@ import * as React from "react";
 import { Plus, Pencil, Trash2, Eye, MoreHorizontal, Shirt } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner";
+import { useT } from "@/hooks/use-translations";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { PageHeader, StatusBadge, EmptyState } from "@/components/shared/page-components";
 import { DataTable, DataTableColumnHeader } from "@/components/shared/data-table";
@@ -27,6 +28,7 @@ import { GarmentDetailSheet } from "./_components/garment-detail-sheet";
 import { DeleteGarmentDialog } from "./_components/delete-garment-dialog";
 
 export default function GarmentsPage() {
+  const t = useT();
   const [garments, setGarments] = React.useState<Garment[]>(mockGarments);
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
@@ -78,7 +80,7 @@ export default function GarmentsPage() {
             : g
         )
       );
-      toast.success("Garment updated successfully");
+      toast.success(t.garments.form.updateSuccess);
     } else {
       const newGarment: Garment = {
         id: `${Date.now()}`,
@@ -87,7 +89,7 @@ export default function GarmentsPage() {
         updatedAt: new Date(),
       };
       setGarments((prev) => [newGarment, ...prev]);
-      toast.success("Garment created successfully");
+      toast.success(t.garments.form.saveSuccess);
     }
     setIsFormOpen(false);
   };
@@ -95,7 +97,7 @@ export default function GarmentsPage() {
   const handleDelete = () => {
     if (selectedGarment) {
       setGarments((prev) => prev.filter((g) => g.id !== selectedGarment.id));
-      toast.success("Garment deleted successfully");
+      toast.success(t.garments.delete.success);
       setIsDeleteOpen(false);
       setSelectedGarment(null);
     }
@@ -104,14 +106,14 @@ export default function GarmentsPage() {
   const columns: ColumnDef<Garment>[] = [
     {
       accessorKey: "code",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Code" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.garments.columns.code} />,
       cell: ({ row }) => (
         <span className="font-mono text-sm">{row.getValue("code")}</span>
       ),
     },
     {
       accessorKey: "name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Client Name" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.garments.columns.clientName} />,
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -126,14 +128,14 @@ export default function GarmentsPage() {
     },
     {
       accessorKey: "productionType",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Production Type" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.garments.columns.productionType} />,
       cell: ({ row }) => (
         <Badge variant="outline">{row.getValue("productionType")}</Badge>
       ),
     },
     {
       accessorKey: "picName",
-      header: "PIC",
+      header: t.garments.columns.pic,
       cell: ({ row }) => (
         <div>
           <p className="text-sm">{row.getValue("picName")}</p>
@@ -143,11 +145,11 @@ export default function GarmentsPage() {
     },
     {
       accessorKey: "phone",
-      header: "Phone",
+      header: t.garments.columns.phone,
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t.garments.columns.status,
       cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
     },
     {
@@ -164,11 +166,11 @@ export default function GarmentsPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => openDetail(garment)}>
                 <Eye className="mr-2 h-4 w-4" />
-                View Details
+                {t.common.viewDetails}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => openEditForm(garment)}>
                 <Pencil className="mr-2 h-4 w-4" />
-                Edit
+                {t.common.edit}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -176,7 +178,7 @@ export default function GarmentsPage() {
                 className="text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Delete
+                {t.common.delete}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -188,13 +190,13 @@ export default function GarmentsPage() {
   return (
     <DashboardLayout>
       <PageHeader
-        title="Garments"
-        description="Manage your garment clients and production partners"
-        breadcrumbs={[{ label: "Garments" }]}
+        title={t.garments.title}
+        description={t.garments.description}
+        breadcrumbs={[{ label: t.garments.title }]}
         actions={
           <Button onClick={openCreateForm}>
             <Plus className="mr-2 h-4 w-4" />
-            Add Garment
+            {t.garments.addGarment}
           </Button>
         }
       />
@@ -202,12 +204,12 @@ export default function GarmentsPage() {
       {garments.length === 0 ? (
         <EmptyState
           icon={<Shirt className="h-8 w-8" />}
-          title="No garments found"
-          description="Get started by adding your first garment client."
+          title={t.garments.noGarmentsFound}
+          description={t.garments.noGarmentsDesc}
           action={
             <Button onClick={openCreateForm}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Garment
+              {t.garments.addGarment}
             </Button>
           }
         />
@@ -215,7 +217,7 @@ export default function GarmentsPage() {
         <DataTable
           columns={columns}
           data={garments}
-          searchPlaceholder="Search garments..."
+          searchPlaceholder={t.garments.searchPlaceholder}
         />
       )}
 

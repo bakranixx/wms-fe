@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
+import { useT } from "@/hooks/use-translations";
 import {
   Plus,
   Eye,
@@ -37,6 +38,7 @@ const statusFilter: POStatus[] = ["Draft", "Approved", "Partial Received", "Comp
 
 export default function PurchaseOrdersPage() {
   const router = useRouter();
+  const t = useT();
   const { purchaseOrders, approvePurchaseOrder } = usePurchaseOrdersStore();
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
   const [selectedPO, setSelectedPO] = React.useState<PurchaseOrder | null>(null);
@@ -62,14 +64,14 @@ export default function PurchaseOrdersPage() {
   const columns: ColumnDef<PurchaseOrder>[] = [
     {
       accessorKey: "poNumber",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="PO Number" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.purchaseOrders.columns.poNumber} />,
       cell: ({ row }) => (
         <span className="font-mono text-sm font-medium text-primary">{row.getValue("poNumber")}</span>
       ),
     },
     {
       accessorKey: "vendor",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Vendor" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.purchaseOrders.columns.vendor} />,
       cell: ({ row }) => {
         const vendor = row.original.vendor;
         return (
@@ -87,29 +89,29 @@ export default function PurchaseOrdersPage() {
     },
     {
       accessorKey: "warehouse",
-      header: "Warehouse",
+      header: t.purchaseOrders.columns.warehouse,
       cell: ({ row }) => row.original.warehouse.name,
     },
     {
       accessorKey: "orderDate",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Order Date" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.purchaseOrders.columns.orderDate} />,
       cell: ({ row }) => format(row.original.orderDate, "MMM dd, yyyy"),
     },
     {
       accessorKey: "expectedDate",
-      header: "Expected Date",
+      header: t.purchaseOrders.columns.expectedDate,
       cell: ({ row }) => format(row.original.expectedDate, "MMM dd, yyyy"),
     },
     {
       accessorKey: "totalAmount",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Total Amount" />,
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t.purchaseOrders.columns.totalAmount} />,
       cell: ({ row }) => (
         <span className="font-medium">Rp {row.original.totalAmount.toLocaleString()}</span>
       ),
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t.purchaseOrders.columns.status,
       cell: ({ row }) => <StatusBadge status={row.getValue("status")} />,
     },
     {
@@ -126,12 +128,12 @@ export default function PurchaseOrdersPage() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => openDetail(po)}>
                 <Eye className="mr-2 h-4 w-4" />
-                View Details
+                {t.purchaseOrders.actions.viewDetails}
               </DropdownMenuItem>
               {po.status === "Draft" && (
                 <DropdownMenuItem onClick={() => handleApprove(po)}>
                   <Check className="mr-2 h-4 w-4" />
-                  Approve PO
+                  {t.purchaseOrders.actions.approvePO}
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -144,13 +146,13 @@ export default function PurchaseOrdersPage() {
   return (
     <DashboardLayout>
       <PageHeader
-        title="Purchase Orders"
-        description="Manage inbound orders from vendors"
-        breadcrumbs={[{ label: "Purchase Orders" }]}
+        title={t.purchaseOrders.title}
+        description={t.purchaseOrders.description}
+        breadcrumbs={[{ label: t.purchaseOrders.title }]}
         actions={
           <Button onClick={() => router.push("/purchase-orders/create")}>
             <Plus className="mr-2 h-4 w-4" />
-            Create PO
+            {t.purchaseOrders.createPO}
           </Button>
         }
       />
@@ -158,12 +160,12 @@ export default function PurchaseOrdersPage() {
       {purchaseOrders.length === 0 ? (
         <EmptyState
           icon={<FileText className="h-8 w-8" />}
-          title="No purchase orders found"
-          description="Get started by creating your first purchase order."
+          title={t.purchaseOrders.noPOFound}
+          description={t.purchaseOrders.noPOFoundDesc}
           action={
             <Button onClick={() => router.push("/purchase-orders/create")}>
               <Plus className="mr-2 h-4 w-4" />
-              Create PO
+              {t.purchaseOrders.createPO}
             </Button>
           }
         />
@@ -171,14 +173,14 @@ export default function PurchaseOrdersPage() {
         <DataTable
           columns={columns}
           data={filteredOrders}
-          searchPlaceholder="Search purchase orders..."
+          searchPlaceholder={t.purchaseOrders.searchPlaceholder}
           filterComponent={
             <Select value={filterStatus} onValueChange={setFilterStatus}>
               <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter status" />
+                <SelectValue placeholder={t.common.filterStatus} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="all">{t.common.allStatus}</SelectItem>
                 {statusFilter.map((status) => (
                   <SelectItem key={status} value={status}>
                     {status}
